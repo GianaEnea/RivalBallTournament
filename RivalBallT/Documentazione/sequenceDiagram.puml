@@ -1,0 +1,34 @@
+@startuml
+actor Player
+boundary Client
+control Server
+entity Ball
+entity Paddle
+entity Brick
+
+Player -> Client: Start Game
+activate Client
+
+Player -> Server: Move Paddle
+activate Server
+
+Server -> Paddle: Move(mouseX)
+activate Paddle
+
+Server --> Client: Update Game State
+Client -> Ball: Move
+activate Ball
+
+Ball --> Paddle: Check Collision
+Paddle -> Server: Hit Paddle
+
+Server -> Brick: Check Collision
+activate Brick
+
+Client --> Player: Display Updated Game
+deactivate Server
+deactivate Paddle
+deactivate Ball
+deactivate Brick
+deactivate Client
+@enduml
