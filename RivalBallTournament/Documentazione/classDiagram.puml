@@ -4,11 +4,52 @@ class Game {
   -WIDTH: int = 800
   -HEIGHT: int = 600
   -oggetiDaStampare: String[]
+
+class Game {
+  -WIDTH: int = 800
+  -HEIGHT: int = 600
+  -oggetiDaStampare: String[]
   -buffer: BufferedImage
   -bufferGraphics: Graphics
   +Start(): void
   +setData(data: String[]): void
+  +Start(): void
+  +setData(data: String[]): void
   +paint(g: Graphics): void
+  +drawPaddle(g: Graphics, x: int, y: int, width: int, height: int, id: int): void
+  +drawBall(g: Graphics, x: int, y: int, size: int, owner: int): void
+  +drawBricks(g: Graphics, x: int, y: int, width: int, height: int, hp: int): void
+}
+
+class cliet {
+  -WIDTH: int = 800
+  -HEIGHT: int = 600
+  -serverAddress: String = "localhost"
+  -portNumber: int = 5555
+  -paddlePosition: int
+  -paddleJump: boolean
+  -p: Point
+  -inputLine: String
+  -gameOverFlag: boolean
+  -isFirst: boolean
+  +main(args: String[]): void
+  +Game: Game
+}
+
+class Server {
+  -portNumber: int = 5555
+  -scheduledThreadPoolExecutor: ScheduledExecutorService
+  -WIDTH: int = 800
+  -HEIGHT: int = 600
+  -ball: Ball
+  -paddle: Paddle
+  -bricks: ArrayList<Brick>
+  -gameOverFlag: boolean = false
+  +main(args: String[]): void
+  +handleClient(clientSocket: Socket, id: int): void
+  +update(inputLine: String): void
+  +checkCollision(): void
+  +doPause(ms: int): void
   +drawPaddle(g: Graphics, x: int, y: int, width: int, height: int, id: int): void
   +drawBall(g: Graphics, x: int, y: int, size: int, owner: int): void
   +drawBricks(g: Graphics, x: int, y: int, width: int, height: int, hp: int): void
@@ -48,6 +89,8 @@ class Server {
 class Ball {
   -id: int
   -SIZE: int = 20
+  -id: int
+  -SIZE: int = 20
   -x: int
   -y: int
   -owner: int
@@ -59,6 +102,7 @@ class Ball {
   +setOwner(owner: int): void
   +Ball(x: int, y: int)
   +move(): void
+  +changeOwner(): void
   +changeOwner(): void
   +reverseX(): void
   +reverseY(): void
@@ -84,12 +128,34 @@ class Brick {
   +getBounds(): Rectangle
 }
 
+class Brick {
+  -id: int
+  -WIDTH: int = 60
+  -HEIGHT: int = 20
+  -x: int
+  -y: int
+  -hp: int = 3
+  +Brick(x: int, y: int)
+  +getX(): int
+  +getY(): int
+  +getId(): int
+  +setId(id: int): void
+  +getHp(): int
+  +setHp(hp: int): void
+  +getBounds(): Rectangle
+}
+
 class Paddle {
+  -WIDTH: int = 150
+  -HEIGHT: int = 15
+  -id: int
   -WIDTH: int = 150
   -HEIGHT: int = 15
   -id: int
   -x: int
   -y: int
+  +getId(): int
+  +setId(id: int): void
   +getId(): int
   +setId(id: int): void
   +Paddle(x: int, y: int)
@@ -102,6 +168,9 @@ class Paddle {
 class PowerUp {
   -id: String
   -spownedBy: int
+class PowerUp {
+  -id: String
+  -spownedBy: int
   -x: int
   -y: int
   -speed: int = 1
@@ -111,9 +180,30 @@ class PowerUp {
   +setId(id: String): void
   +getSpownedBy(): int
   +setSpownedBy(spownedBy: int): void
+  -speed: int = 1
+  -SIZE: int = 20
+  -Powerups: String[]
+  +getId(): String
+  +setId(id: String): void
+  +getSpownedBy(): int
+  +setSpownedBy(spownedBy: int): void
   +getX(): int
   +setX(x: int): void
+  +setX(x: int): void
   +getY(): int
+  +setY(y: int): void
+  +fall(): void
+  +RollaPowerup(): String
+}
+
+
+Game --|> JFrame : Inheritance
+cliet --> Game : Uses
+cliet --> Server : Connect
+Server --> Brick : Uses
+Server --> Ball : Uses
+Server --> Paddle : Uses
+Server --> PowerUp : Uses
   +setY(y: int): void
   +fall(): void
   +RollaPowerup(): String
