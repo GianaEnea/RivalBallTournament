@@ -1,0 +1,29 @@
+# Ignora i file generati dal compilatore Java
+target/
+
+# Ignora i file di configurazione di IntelliJ IDEA
+.idea/
+
+# Ignora i file di configurazione specifici del sistema operativo
+*.iml
+*.ipr
+*.iws
+*.DS_Store
+
+# Ignora i file generati da Visual Studio
+bin/
+obj/
+.vscode/
+*.suo
+*.user
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+*.userprefs
+*.log
+*.sqlite
+*.sqlite3
+*.sdf
+*.opensdf

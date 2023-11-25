@@ -1,7 +1,5 @@
 package RivalBallTournament.server;
 
-import javax.swing.*;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Server extends JFrame {
+public class Server{
     static final int portNumber = 5555;
     private static final ScheduledExecutorService scheduledThreadPoolExecutor = Executors.newScheduledThreadPool(10);
 
@@ -91,7 +89,7 @@ public class Server extends JFrame {
             }
             //missing stats output
             //TO-DO: manda stats
-            writer.println("9;");
+            writer.println("9,"+paddle.getId()+","+paddle.getScore());
 
         } catch (IOException e) {
             e.printStackTrace();
