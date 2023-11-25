@@ -5,6 +5,8 @@ control Server
 entity Ball
 entity Paddle
 entity Brick
+entity PowerUp 
+control Game
 
 Player -> Client: Start Game
 activate Client
@@ -12,20 +14,41 @@ activate Client
 Player -> Server: Move Paddle
 activate Server
 
-Server -> Paddle: Move(mouseX)
+Server -> Paddle: move(mouseX)
 activate Paddle
+Paddle --> Server: getX(), getY(), getBounds()
 
-Server --> Client: Update Game State
-Client -> Ball: Move
+Server -> Ball: move()
 activate Ball
+Ball --> Server: getX(), getY(), getBounds(), getOwner()
+Server --> Paddle: checkCollision()
 
-Ball --> Paddle: Check Collision
-Paddle -> Server: Hit Paddle
-
-Server -> Brick: Check Collision
+Server -> Brick: checkCollision()
 activate Brick
+Brick --> Server: getX(), getY(), getBounds(), getHp()
+deactivate Brick
 
-Client --> Player: Display Updated Game
+Server -> PowerUp: fall()
+activate PowerUp
+PowerUp --> Server: getX(), getY(), getSpownedBy()
+deactivate PowerUp
+
+Server --> Game: Update Game State
+activate Game
+Game -> Ball: drawBall()
+activate Ball
+Ball --> Paddle: checkCollision()
+Paddle -> Game: drawPaddle()
+Game -> Brick: drawBricks()
+activate Brick
+Brick --> Server: updateHp()
+deactivate Brick
+Game -> PowerUp: drawPowerUps()
+activate PowerUp
+PowerUp --> Server: applyPowerUp()
+deactivate PowerUp
+Game -> Client: Display Updated Game
+deactivate Game
 deactivate Server
 deactivate Paddle
 deactivate Ball
