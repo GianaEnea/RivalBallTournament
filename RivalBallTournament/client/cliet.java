@@ -2,7 +2,6 @@ package RivalBallTournament.client;
 
 import javax.swing.*;
 
-
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.io.BufferedReader;

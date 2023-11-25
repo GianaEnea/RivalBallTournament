@@ -28,7 +28,7 @@ public class Game extends JFrame{
 
         repaint();
         
-        Timer timer = new Timer(10, new ActionListener() {
+        Timer timer = new Timer(30, new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 repaint();
             }

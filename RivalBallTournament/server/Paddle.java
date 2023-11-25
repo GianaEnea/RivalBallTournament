@@ -3,8 +3,8 @@ package RivalBallTournament.server;
 import java.awt.*;
 
 public class Paddle {
-    public static final int WIDTH = 100;
-    public static final int HEIGHT = 20;
+    public static final int WIDTH = 150;
+    public static final int HEIGHT = 15;
     private int id;
     
     public int getId() {
@@ -33,7 +33,6 @@ public class Paddle {
         }
     }
 
-    
 
     public int getX() {
         return x;

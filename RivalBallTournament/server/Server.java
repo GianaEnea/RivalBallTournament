@@ -9,9 +9,13 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Server extends JFrame {
     static final int portNumber = 5555;
+    private static final ScheduledExecutorService scheduledThreadPoolExecutor = Executors.newScheduledThreadPool(10);
 
     static final int WIDTH = 800;
     static final int HEIGHT = 600;
@@ -29,7 +33,7 @@ public class Server extends JFrame {
 
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
-                bricks.add(new Brick(i * 100 + 50, j * 40 + 50));
+                bricks.add(new Brick(i * 80 + 15, j * 40 + 200));
             }
         }
 
@@ -76,14 +80,14 @@ public class Server extends JFrame {
                 int count = 0;
                 for (Brick brick : bricks) {
                     count++;
-                    output = "3,"+brick.getId()+","+brick.getX()+","+brick.getY()+","+brick.WIDTH+","+brick.HEIGHT+","+brick.getHp();
+                    output += "3,"+brick.getId()+","+brick.getX()+","+brick.getY()+","+brick.WIDTH+","+brick.HEIGHT+","+brick.getHp();
                     if (count != bricks.size()) {
                         output += ";";
                     }
                 }
                 writer.println(output);
                 inputLine = "";
-                
+                doPause(15);
             }
             //missing stats output
             //TO-DO: manda stats
@@ -111,6 +115,9 @@ public class Server extends JFrame {
         // Verifica collisione con il paddle
         if (ball.getBounds().intersects(paddle.getBounds())) {
             ball.reverseY();
+            if (ball.getOwner() != paddle.getId()) {
+                ball.changeOwner();
+            }
         }
 
         // Verifica collisione con i mattoni
@@ -140,6 +147,15 @@ public class Server extends JFrame {
         //verifica se la partita è finita
         if (bricks.size() == 0) {
             gameOverFlag = true;
+        }
+    }
+    
+    private static void doPause(int ms) {
+        try {
+            scheduledThreadPoolExecutor.schedule(() -> {
+            }, ms, TimeUnit.MILLISECONDS).get();
+        } catch (Exception e) {
+            throw new RuntimeException();
         }
     }
 }

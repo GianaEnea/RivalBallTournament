@@ -7,8 +7,8 @@ public class Ball {
     public static final int SIZE = 20;
     private int x, y;
     private int owner;
-    private int xSpeed = 2;
-    private int ySpeed = 2;
+    private int xSpeed = 3;
+    private int ySpeed = 3;
 
     public int getId() {
         return id;
@@ -37,7 +37,10 @@ public class Ball {
     }
 
     public void changeOwner() {
-        
+        if(owner == 1)
+            owner = 0;
+        else
+            owner = 1;
     }
 
     public void reverseX() {

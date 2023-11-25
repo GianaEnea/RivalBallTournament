@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class Brick {
     private int id;
-    public static final int WIDTH = 90;
-    public static final int HEIGHT = 30;
+    public static final int WIDTH = 60;
+    public static final int HEIGHT = 20;
     private  int x, y;
     private int hp = 3;
 
