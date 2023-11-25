@@ -136,6 +136,10 @@ public class Server extends JFrame {
 
         if (ball.getY() <= 0) {
             ball.reverseY();
+            //bisogna modificarlo per il multiplayer
+            if (ball.getOwner() != paddle.getId()) {
+                ball.changeOwner();
+            }
         }
 
         // Verifica se il giocatore ha perso palla
