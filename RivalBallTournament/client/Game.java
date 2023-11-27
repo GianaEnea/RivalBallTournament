@@ -2,8 +2,6 @@ package RivalBallTournament.client;
 
 import javax.swing.*;
 
-import org.w3c.dom.events.MouseEvent;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -19,7 +17,7 @@ public class Game extends JFrame{
     public boolean isMouseClicked = false;
     public int mousePosition = WIDTH / 2 - 100 / 2;;
 
-    public void Start(){
+    public Game(){
         JPanel panel = new JPanel();
         panel.addMouseListener(new MouseListener() {
             @Override
@@ -46,9 +44,6 @@ public class Game extends JFrame{
                }
         });
 
-        
-
-
         this.add(panel);
 
         setVisible(true);
@@ -59,9 +54,14 @@ public class Game extends JFrame{
         setResizable(false);
 
         buffer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-        bufferGraphics = buffer.getGraphics();
+        bufferGraphics = buffer.createGraphics();
 
-        repaint();
+        setFocusable(true);
+    }
+
+    public void Start(){
+        
+        //repaint();
         
         Timer timer = new Timer(30, new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -71,7 +71,6 @@ public class Game extends JFrame{
 
         timer.start();
 
-        setFocusable(true);
     }
     
     public void setData(String[] data){

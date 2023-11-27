@@ -2,8 +2,6 @@ package RivalBallTournament.client;
 
 import javax.swing.*;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,29 +25,23 @@ public class client extends JFrame{
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
         ) {
             Game game = new Game();
-            //while (! entrambi connessi) {...}    forse
             
-            //"posizioneMouse;saltoPaddle"
             int paddlePosition = WIDTH / 2 - 100 / 2;
             boolean paddleJump = false;
 
-
-            //Point p;
             String inputLine;
             boolean gameOverFlag = false;
             boolean isFirst = true;
             while (!gameOverFlag) {
                 writer.println(paddlePosition+";"+Boolean.toString(paddleJump));
-                //p = MouseInfo.getPointerInfo().getLocation();
-                paddlePosition = game.mousePosition;//(int)p.getX();
+                paddlePosition = game.mousePosition;
                 inputLine = reader.readLine();
                 String[] obj = inputLine.split(";");
                 game.setData(obj);
                 inputLine = "";
 
                 if (isFirst) {
-                    //new Thread(() -> game.Start()).start();
-                    game.Start();
+                    new Thread(() -> game.Start()).start();
                     isFirst = false;
                 }
             }

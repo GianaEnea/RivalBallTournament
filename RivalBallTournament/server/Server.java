@@ -17,16 +17,15 @@ public class Server{
 
     static final int WIDTH = 800;
     static final int HEIGHT = 600;
-
-    private static Ball ball;
-    private static Paddle paddle;
+    private static ArrayList<Paddle> paddles;
+    private static ArrayList<Ball> balls;
     private static ArrayList<Brick> bricks;
 
     private static boolean gameOverFlag = false;
 
     public static void main(String[] args) {
-        paddle = new Paddle(WIDTH / 2 - Paddle.WIDTH / 2, HEIGHT - 50);
-        ball = new Ball(WIDTH / 2, HEIGHT / 2);
+        paddles = new ArrayList<>();
+        balls = new ArrayList<>();
         bricks = new ArrayList<>();
 
         for (int i = 0; i < 7; i++) {
@@ -35,54 +34,72 @@ public class Server{
             }
         }
 
-        try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
+        try (
+            ServerSocket serverSocket = new ServerSocket(portNumber);
+        ) {
             int queue = 0;
             Socket[] playersSockets= new Socket[2];
-            //2 per multiplayer, non implementato
-            while (queue < 1) {
-                playersSockets[queue] = serverSocket.accept();//new Socket(serverSocket.getInetAddress().getHostAddress(), serverSocket.getLocalPort());
-                System.out.println("Client connected: " + playersSockets[queue].getInetAddress().getHostAddress());
+            while (queue < 2) {
+                playersSockets[queue] = serverSocket.accept();
+                //System.out.println("Client connected: " + playersSockets[queue].getInetAddress().getHostAddress());
                 queue++;
-                // Handle communication with the client in a new thread
             }
             //fa pertite la gestione del gioco client una volta connesse due socket
             boolean isFirst = true;
-            if (isFirst) {
-                new Thread(() -> handleClient(playersSockets[0], 0)).start();
-                isFirst = false;
+            for (Socket socket : playersSockets) {
+                if (isFirst) {
+                    new Thread(() -> handleClient(socket, 0)).start();
+                    isFirst = false;
+                }
+                else {
+                    new Thread(() -> handleClient(socket, 1)).start();
+                }
             }
-            else {
-                new Thread(() -> handleClient(playersSockets[1], 1)).start();
-            }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void handleClient(Socket clientSocket, int id) {
+        Paddle paddle;
+        if (id == 0) {
+            paddle = new Paddle(WIDTH / 2 - Paddle.WIDTH / 2, HEIGHT - 50);
+        }
+        else {
+            paddle = new Paddle(WIDTH / 2 - Paddle.WIDTH / 2, 50);
+        }
+        paddle.setId(id);
+        paddles.add(paddle);
+
+        Ball ball;
+        if (id == 0) {
+            ball = new Ball(WIDTH / 2, HEIGHT / 2);
+        }
+        else {
+            ball = new Ball(WIDTH / 2, HEIGHT / 2);
+        }
+        ball.setOwner(id);
+        balls.add(ball);
+
         try (
             BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)
         ) {
-            paddle.setId(id);
-            ball.setOwner(id);
             String inputLine;
             while (!gameOverFlag) {
                 inputLine = reader.readLine();
-                update(inputLine);
+                update(inputLine, paddle, ball);
 
                 // Echo the message back to the client
-                String output = "1,"+paddle.getId()+","+paddle.getX()+","+paddle.getY()+","+paddle.WIDTH+","+paddle.HEIGHT+";";
-                output += "2,"+ball.getId()+","+ball.getX()+","+ball.getY()+","+ball.SIZE+","+ball.getOwner()+";";
-                int count = 0;
-                for (Brick brick : bricks) {
-                    count++;
-                    output += "3,"+brick.getId()+","+brick.getX()+","+brick.getY()+","+brick.WIDTH+","+brick.HEIGHT+","+brick.getHp();
-                    if (count != bricks.size()) {
-                        output += ";";
-                    }
+                String output = "";
+                for (Paddle p : paddles) {
+                    output += "1,"+p.getId()+","+p.getX()+","+p.getY()+","+p.WIDTH+","+p.HEIGHT+";";
                 }
+                for (Ball b : balls) {
+                    output += "2,"+b.getId()+","+b.getX()+","+b.getY()+","+b.SIZE+","+b.getOwner()+";";
+                }
+                output += addBricks();
+
                 writer.println(output);
                 inputLine = "";
                 doPause(15);
@@ -102,14 +119,15 @@ public class Server{
         }
     }
 
-    private static void update(String inputLine) {
+    private static synchronized void update(String inputLine, Paddle paddle, Ball ball) {
         String[] input = inputLine.split(";");
         paddle.move(Integer.parseInt(input[0]));
         ball.move();
-        checkCollision();
+        checkCollision(paddle, ball);
+        //System.out.println(paddles.get(1).getX());
     }
 
-    private static void checkCollision() {
+    private static void checkCollision(Paddle paddle, Ball ball) {
         // Verifica collisione con il paddle
         if (ball.getBounds().intersects(paddle.getBounds())) {
             ball.reverseY();
@@ -159,5 +177,18 @@ public class Server{
         } catch (Exception e) {
             throw new RuntimeException();
         }
+    }
+
+    private static synchronized String addBricks() {
+        String output = "";
+        int count = 0;
+        for (Brick b : bricks) {
+            count++;
+            output += "3,"+b.getId()+","+b.getX()+","+b.getY()+","+b.WIDTH+","+b.HEIGHT+","+b.getHp();
+            if (count != bricks.size()) {
+                output += ";";
+            }
+        }
+        return output;
     }
 }
