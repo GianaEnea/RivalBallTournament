@@ -9,8 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-//work in progress
-public class client extends JFrame{
+public class client {
     static final int WIDTH = 800;
     static final int HEIGHT = 600;
 
@@ -36,12 +35,14 @@ public class client extends JFrame{
                 writer.println(paddlePosition+";"+Boolean.toString(paddleJump));
                 paddlePosition = game.mousePosition;
                 inputLine = reader.readLine();
-                String[] obj = inputLine.split(";");
-                game.setData(obj);
+                if (inputLine != null) {
+                    String[] obj = inputLine.split(";");
+                    game.setData(obj);
+                }
                 inputLine = "";
 
                 if (isFirst) {
-                    new Thread(() -> game.Start()).start();
+                    game.Start();
                     isFirst = false;
                 }
             }

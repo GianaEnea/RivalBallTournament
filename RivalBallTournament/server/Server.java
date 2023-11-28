@@ -98,7 +98,7 @@ public class Server{
                 for (Ball b : balls) {
                     output += "2,"+b.getId()+","+b.getX()+","+b.getY()+","+b.SIZE+","+b.getOwner()+";";
                 }
-                output += addBricks();
+                output += getBricks();
 
                 writer.println(output);
                 inputLine = "";
@@ -179,7 +179,7 @@ public class Server{
         }
     }
 
-    private static synchronized String addBricks() {
+    private static synchronized String getBricks() {
         String output = "";
         int count = 0;
         for (Brick b : bricks) {
