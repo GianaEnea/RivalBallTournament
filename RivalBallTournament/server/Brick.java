@@ -7,6 +7,7 @@ public class Brick {
     public static final int WIDTH = 60;
     public static final int HEIGHT = 20;
     private  int x, y;
+    //quante volte può essere colpito prima di rompersi
     private int hp = 3;
 
     public Brick(int x, int y) {
@@ -37,7 +38,7 @@ public class Brick {
     public void setHp(int hp) {
         this.hp = hp;
     }
-
+    //ritorna la posizione del brick
     public Rectangle getBounds() {
         return new Rectangle(x, y, WIDTH, HEIGHT);
     }

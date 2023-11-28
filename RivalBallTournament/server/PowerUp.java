@@ -6,7 +6,8 @@ public class PowerUp {
     public int x, y;
     public int speed = 1;
     public static final int SIZE = 20;
-    String[] Powerups = {"BallBig", "BallSmall", "PaddleBig", "PaddleSmall", "BallDamage", "BallSlow", "BallFast"};
+    //lista dei powerUp
+    public static String[] Powerups = {"BallBig", "BallSmall", "PaddleBig", "PaddleSmall", "BallDamage", "BallSlow", "BallFast"};
 
     public String getId() {
         return id;
@@ -40,6 +41,14 @@ public class PowerUp {
         this.y = y;
     }
 
+    public PowerUp(String id, int spownedBy, int x, int y) {
+        this.id = id;
+        this.spownedBy = spownedBy;
+        this.x = x;
+        this.y = y;
+    }
+
+    //fa cadere il powerUp verso chi ha rotto il brick
     public void fall() {
         if (spownedBy == 0) {
             y += speed;
@@ -50,8 +59,8 @@ public class PowerUp {
         }
         y += speed;
     }
-
-    public String RollaPowerup(){
+    //restituisce la stringa con il nome di un powerUp
+    public static String RollaPowerup(){
         int max = Powerups.length;
         int min = 0;
         int range = max - min + 1;

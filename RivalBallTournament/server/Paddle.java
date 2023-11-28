@@ -5,10 +5,11 @@ import java.awt.*;
 public class Paddle {
     public static final int WIDTH = 150;
     public static final int HEIGHT = 15;
+    //che player sta usando la paddle
     private int id;
     private int score = 0;
     private int x, y;
-
+    
     public int getId() {
         return id;
     }
@@ -37,11 +38,11 @@ public class Paddle {
     public int getY() {
         return y;
     }
-
+    //ritorna il rettangolo
     public Rectangle getBounds() {
         return new Rectangle(x, y, WIDTH, HEIGHT);
     }
-
+    //aggiorna la posizione della paddle
     public void move(int mouseX) {
         x = mouseX - WIDTH / 2;
 

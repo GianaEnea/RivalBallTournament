@@ -6,6 +6,7 @@ public class Ball {
     private int id;
     public static final int SIZE = 20;
     private int x, y;
+    //player che ha colpito la pallina per ultimo
     private int owner;
     private int xSpeed = 3;
     private int ySpeed = 3;
@@ -35,18 +36,18 @@ public class Ball {
         x += xSpeed;
         y += ySpeed;
     }
-
+    //se una paddle colpisce la pallina se ne appropria
     public void changeOwner() {
         if(owner == 1)
-            owner = 0;
+            this.setOwner(0);
         else
-            owner = 1;
+            this.setOwner(1);
     }
-
+    //cambio direzione
     public void reverseX() {
         xSpeed = -xSpeed;
     }
-
+    //cambio direzione
     public void reverseY() {
         ySpeed = -ySpeed;
     }
@@ -58,7 +59,7 @@ public class Ball {
     public int getY() {
         return y;
     }
-
+    //ritorna la posizione della pallina
     public Rectangle getBounds() {
         return new Rectangle(x, y, SIZE, SIZE);
     }
