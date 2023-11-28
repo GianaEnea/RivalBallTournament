@@ -72,9 +72,6 @@ public class myPanel extends JPanel{
                 }
             }
         }
-
-        // Copia il buffer sulla finestra
-        //g.drawImage(buffer, 0, 0, this);
     }
 
     public void drawPaddle(Graphics2D g, int x, int y, int width, int height, int id) {
@@ -106,8 +103,6 @@ public class myPanel extends JPanel{
     }
 
     public void gameOver(Graphics2D g, int id1, int score1, int id2, int score2) {
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
         g.setColor(Color.BLUE);
         g.drawString(String.valueOf(score1), 100, 100);
         g.setColor(Color.RED);
