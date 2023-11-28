@@ -116,6 +116,11 @@ public class Server{
                 //se la stringa inizia con 3 sono informazioni Brick
                 output += getBricks();
 
+                for (PowerUp p : Powerups) {
+                    //TODO: madare le informazioni dei powerup nell'ordine giusto
+                    //output += "4,"+p.getId()+","+p.getX()+","+p.getY()+","+p.SIZE+","+p.spownedBy";";
+                }
+
                 writer.println(output);
                 inputLine = "";
                 doPause(15);
@@ -185,7 +190,6 @@ public class Server{
             if (ball.getBounds().intersects(brick.getBounds())) {
                 bricks.remove(brick);
                 ball.reverseY();
-                //TODO : togli vita al mattone e se si rompe aumentare punti punti
                 break;
             }
         }*/
@@ -208,7 +212,7 @@ public class Server{
                     brick.setHp(brick.getHp()-1);
                     ball.reverseY();
                 }
-                //TODO : Decidere punteggio e rollare powerUp
+                //TODO : Decidere punteggio
                 if (collisionOnX || collisionOnY) {
                 if (brick.getHp() == 0) {
                     paddle.setScore(paddle.getScore()+ 100);
@@ -236,7 +240,7 @@ public class Server{
         if (ball.getY() >= HEIGHT) {
             ball.reverseY();
             ball.changeOwner();
-            //TODO : Dare punti all'avversario
+            //TODO : Decidere punti da dare all'avversario
         }
 
         //verifica se la partita è finita
