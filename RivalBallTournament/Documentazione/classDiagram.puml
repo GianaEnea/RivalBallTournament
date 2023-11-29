@@ -1,27 +1,28 @@
 @startuml
 
-class Game {
-  -WIDTH: int = 800
-  -HEIGHT: int = 600
-  -oggetiDaStampare: String[]
+class myFrame {
+  -panel: myPanel
+  -isMouseClicked: boolean
+  -mousePosition: int
+  +myFrame()
+}
 
-class Game {
+class myPanel {
   -WIDTH: int = 800
   -HEIGHT: int = 600
+  -gameOverFlag: boolean
   -oggetiDaStampare: String[]
-  -buffer: BufferedImage
-  -bufferGraphics: Graphics
-  +Start(): void
   +setData(data: String[]): void
   +Start(): void
-  +setData(data: String[]): void
+  +draw(): void
   +paint(g: Graphics): void
-  +drawPaddle(g: Graphics, x: int, y: int, width: int, height: int, id: int): void
-  +drawBall(g: Graphics, x: int, y: int, size: int, owner: int): void
-  +drawBricks(g: Graphics, x: int, y: int, width: int, height: int, hp: int): void
+  +drawPaddle(g: Graphics2D, x: int, y: int, width: int, height: int, id: int): void
+  +drawBall(g: Graphics2D, x: int, y: int, size: int, owner: int): void
+  +drawBricks(g: Graphics2D, x: int, y: int, width: int, height: int, hp: int): void
+  +gameOver(g: Graphics2D, id1: int, score1: int, id2: int, score2: int): void
 }
 
-class cliet {
+class client {
   -WIDTH: int = 800
   -HEIGHT: int = 600
   -serverAddress: String = "localhost"
@@ -53,37 +54,6 @@ class Server {
   +drawPaddle(g: Graphics, x: int, y: int, width: int, height: int, id: int): void
   +drawBall(g: Graphics, x: int, y: int, size: int, owner: int): void
   +drawBricks(g: Graphics, x: int, y: int, width: int, height: int, hp: int): void
-}
-
-class cliet {
-  -WIDTH: int = 800
-  -HEIGHT: int = 600
-  -serverAddress: String = "localhost"
-  -portNumber: int = 5555
-  -paddlePosition: int
-  -paddleJump: boolean
-  -p: Point
-  -inputLine: String
-  -gameOverFlag: boolean
-  -isFirst: boolean
-  +main(args: String[]): void
-  +Game: Game
-}
-
-class Server {
-  -portNumber: int = 5555
-  -scheduledThreadPoolExecutor: ScheduledExecutorService
-  -WIDTH: int = 800
-  -HEIGHT: int = 600
-  -ball: Ball
-  -paddle: Paddle
-  -bricks: ArrayList<Brick>
-  -gameOverFlag: boolean = false
-  +main(args: String[]): void
-  +handleClient(clientSocket: Socket, id: int): void
-  +update(inputLine: String): void
-  +checkCollision(): void
-  +doPause(ms: int): void
 }
 
 class Ball {
@@ -196,25 +166,13 @@ class PowerUp {
   +RollaPowerup(): String
 }
 
-
-Game --|> JFrame : Inheritance
-cliet --> Game : Uses
-cliet --> Server : Connect
+client --> myFrame : Uses
+client --> Server : Connect
+Server --> client
 Server --> Brick : Uses
 Server --> Ball : Uses
 Server --> Paddle : Uses
 Server --> PowerUp : Uses
-  +setY(y: int): void
-  +fall(): void
-  +RollaPowerup(): String
-}
+myFrame --> myPanel : Contains
 
-
-Game --|> JFrame : Inheritance
-cliet --> Game : Uses
-cliet --> Server : Connect
-Server --> Brick : Uses
-Server --> Ball : Uses
-Server --> Paddle : Uses
-Server --> PowerUp : Uses
 @enduml

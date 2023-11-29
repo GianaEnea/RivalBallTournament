@@ -62,9 +62,7 @@ public class PowerUp {
     //restituisce la stringa con il nome di un powerUp
     public static String RollaPowerup(){
         int max = Powerups.length;
-        int min = 0;
-        int range = max - min + 1;
-        int i = (int)(Math.random() * range) + min;
+        int i = (int) (Math.random() * max);
         return Powerups[i];
     }
 }

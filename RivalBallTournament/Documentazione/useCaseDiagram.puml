@@ -1,23 +1,27 @@
+@startuml
+
 left to right direction
 
 actor Client as "Client"
 actor Server as "Server"
-boundary Game as "Game"
+boundary Game as "Myframe"
+boundary info as "Info"
 
 Client --> (Start Game)
 Client --> (Move Paddle)
-Client --> (Hit Brick)
-Client --> (Missed Ball)
-Client --> (End Game)
 
 (Start Game) --> Server: Start Game
 (Move Paddle) --> Server: Move Paddle
-(Hit Brick) --> Server: Hit Brick
-(Missed Ball) --> Server: Missed Ball
-(End Game) --> Server: End Game
+(Move Paddle) --> (Hit Brick)
+(Move Paddle) --> (Missed Ball)
+(Move Paddle) --> (End Game)
+(Hit Brick) --> Server: Move Paddle
+(Missed Ball) --> Server: Move Paddle
+(End Game) --> Server: Move Paddle
 
-(Server) --> (Game): Informazioni da stampare
-(Game) --> (Client): Immagine da stampare
-(Server) --> (Client): Update Game State
+(Server) --> (Game): Print info
+(Game) --> info: Image
+(Server) --> (info): Update Game State
+info --> Client
 
 @enduml

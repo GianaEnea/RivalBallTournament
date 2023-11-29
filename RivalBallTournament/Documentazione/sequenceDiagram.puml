@@ -1,57 +1,40 @@
 @startuml
-actor Player
-boundary Client
-control Server
-entity Ball
-entity Paddle
-entity Brick
-entity PowerUp 
-control Game
 
-Player -> Client: Start Game
-activate Client
+actor client
+participant myFrame
+participant myPanel
+participant Server
+participant Ball
+participant Paddle
+participant Brick
+participant PowerUp
 
-Player -> Server: Move Paddle
-activate Server
+client -> Server: Start
+myFrame -> myPanel: Start
+myPanel -> myFrame: setData(data)
+client -> myFrame: Move Paddle
+myFrame -> myPanel: repaint()
+myPanel -> myFrame: paint(g)
+myFrame -> myPanel: drawPaddle(g, x, y, width, height, id)
+myFrame -> myPanel: drawBall(g, x, y, size, owner)
+myFrame -> myPanel: drawBricks(g, x, y, width, height, hp)
+myPanel -> Server: update(inputLine)
+Server -> Server: handleClient(clientSocket, id)
+Server -> Server: checkCollision()
+Server -> Ball: Check Collision
+Ball -> Paddle: Check Collision
+Paddle -> Server: Hit Paddle
+Server -> Brick: Check Collision
+Brick -> Server: Hit Brick
+Server -> PowerUp: Check Collision
+PowerUp -> Server: RollaPowerup()
+PowerUp -> PowerUp: fall()
+Server -> client: update(outputLine)
+myFrame -> myPanel: gameOver(g, id1, score1, id2, score2)
+myFrame -> myPanel: repaint()
+myPanel -> myFrame: paint(g)
+myFrame -> myPanel: gameOver(g, id1, score1, id2, score2)
+myFrame -> myPanel: repaint()
+myPanel -> client: immagine
 
-Server -> Paddle: move(mouseX)
-activate Paddle
-Paddle --> Server: getX(), getY(), getBounds()
-
-Server -> Ball: move()
-activate Ball
-Ball --> Server: getX(), getY(), getBounds(), getOwner()
-Server --> Paddle: checkCollision()
-
-Server -> Brick: checkCollision()
-activate Brick
-Brick --> Server: getX(), getY(), getBounds(), getHp()
-deactivate Brick
-
-Server -> PowerUp: fall()
-activate PowerUp
-PowerUp --> Server: getX(), getY(), getSpownedBy()
-deactivate PowerUp
-
-Server --> Game: Update Game State
-activate Game
-Game -> Ball: drawBall()
-activate Ball
-Ball --> Paddle: checkCollision()
-Paddle -> Game: drawPaddle()
-Game -> Brick: drawBricks()
-activate Brick
-Brick --> Server: updateHp()
-deactivate Brick
-Game -> PowerUp: drawPowerUps()
-activate PowerUp
-PowerUp --> Server: applyPowerUp()
-deactivate PowerUp
-Game -> Client: Display Updated Game
-deactivate Game
-deactivate Server
-deactivate Paddle
-deactivate Ball
-deactivate Brick
-deactivate Client
 @enduml

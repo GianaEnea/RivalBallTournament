@@ -1,5 +1,6 @@
 package RivalBallTournament.server;
 
+import java.awt.Rectangle;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -154,72 +155,64 @@ public class Server{
     }
     //controlla tutte le collisioni necessarie
     private static void checkCollision(Paddle paddle, Ball ball) {
-        
-        /*if (ball.getBounds().intersects(paddle.getBounds())) {
-            ball.reverseY();
-            if (ball.getOwner() != paddle.getId()) {
-                ball.changeOwner();
-            }
-        }*/
-        
+
         // Verifica collisione con il paddle
-        if (ball.getBounds().intersects(paddle.getBounds())) {
-            boolean collisionOnX = Math.abs(ball.getBounds().getCenterX() - paddle.getBounds().getCenterX()) 
-                                  < (ball.getBounds().getWidth() + paddle.getBounds().getWidth()) / 2;
-            boolean collisionOnY = Math.abs(ball.getBounds().getCenterY() - paddle.getBounds().getCenterY()) 
-                                  < (ball.getBounds().getHeight() + paddle.getBounds().getHeight()) / 2;
-        
-            if (collisionOnX) {
-                // Collisione lungo l'asse X
-                ball.reverseX();
+        //if (ball.getBounds().intersects(paddle.getBounds())) {
+            boolean collisionPOnX = false;
+            boolean collisionPOnY = false;
+            //ritorna il rettangolo creato dall'intersezione
+            Rectangle pr = ball.getBounds().intersection(paddle.getBounds());
+            //se il rettangolo dell'intersezione ha la larghezza più grande dell'altezza è una collisione orizzontale
+            if (pr.width > pr.height && pr.width >= 0 && pr.height >= 0) {
+                collisionPOnX = true;
+                System.out.println("larghezza collisione paddle: "+ pr.width +"altezza collisione paddle: "+ pr.height);
+                System.out.println("collisione orizzontale paddle");
+            }else if(pr.width < pr.height && pr.width >= 0 && pr.height >= 0){
+                collisionPOnY = true;
+                System.out.println("larghezza collisione paddle: "+ pr.width +"altezza collisione paddle: "+ pr.height);
+                System.out.println("collisione verticale paddle");
             }
         
-            if (collisionOnY) {
-                // Collisione lungo l'asse Y
-                ball.reverseY();
-            }
-        
-            if (collisionOnX || collisionOnY) {
+            if (collisionPOnX || collisionPOnY) {
                 if (ball.getOwner() != paddle.getId()) {
                     ball.changeOwner();
                 }
             }
-        }
+        //}
         
-        /*for (Brick brick : bricks) {
-            if (ball.getBounds().intersects(brick.getBounds())) {
-                bricks.remove(brick);
-                ball.reverseY();
-                break;
-            }
-        }*/
         // Verifica collisione con i mattoni
-        if (ball.getBounds().intersects(paddle.getBounds())) {
-            for (Brick brick : bricks) {
-                boolean collisionOnX = Math.abs(ball.getBounds().getCenterX() - brick.getBounds().getCenterX()) 
-                                    < (ball.getBounds().getWidth() + brick.getBounds().getWidth()) / 2;
-                boolean collisionOnY = Math.abs(ball.getBounds().getCenterY() - brick.getBounds().getCenterY()) 
-                                    < (ball.getBounds().getHeight() + brick.getBounds().getHeight()) / 2;
-            
-                if (collisionOnX) {
-                    // Collisione lungo l'asse X
-                    brick.setHp(brick.getHp()-1);
-                    ball.reverseX();
-                }
-            
-                if (collisionOnY) {
-                    // Collisione lungo l'asse Y
-                    brick.setHp(brick.getHp()-1);
-                    ball.reverseY();
-                }
-                //TODO : Decidere punteggio
-                if (collisionOnX || collisionOnY) {
-                if (brick.getHp() == 0) {
+        for (Brick brick : bricks) {
+            boolean collisionBOnX = false;
+            boolean collisionBOnY = false;
+            //ritorna il rettangolo creato dall'intersezione
+            Rectangle br = ball.getBounds().intersection(brick.getBounds());
+            //se il rettangolo dell'intersezione ha la larghezza più grande dell'altezza è una collisione orizzontale
+
+            if (br.width >= br.height) {
+                collisionBOnX = true;
+            }else if(br.width < br.height){
+                collisionBOnY = true;
+            }
+
+            if (collisionBOnX) {
+                // Collisione lungo l'asse X
+                brick.setHp(brick.getHp()-1);
+                ball.reverseX();
+            }
+        
+            if (collisionBOnY) {
+                // Collisione lungo l'asse Y
+                brick.setHp(brick.getHp()-1);
+                ball.reverseY();
+            }
+            //TODO : Decidere punteggio
+            if (collisionBOnX || collisionBOnY) {
+                if (brick.getHp() <= 0) {
                     paddle.setScore(paddle.getScore()+ 100);
+
                     String powerUp = PowerUp.RollaPowerup();
                     Powerups.add(new PowerUp(powerUp, paddle.getId(), brick.getX(), brick.getY()));
                 }
-            }
             }
         }
 
