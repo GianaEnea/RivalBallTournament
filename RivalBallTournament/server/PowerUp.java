@@ -1,5 +1,7 @@
 package RivalBallTournament.server;
 
+import java.util.Random;
+
 public class PowerUp {
     public String id;
     public int spownedBy;
@@ -61,10 +63,8 @@ public class PowerUp {
     }
     //restituisce la stringa con il nome di un powerUp
     public static String RollaPowerup(){
-        int max = Powerups.length;
-        int min = 0;
-        int range = max - min + 1;
-        int i = (int)(Math.random() * range) + min;
+        Random r = new Random();
+        int i = r.nextInt(Powerups.length);
         return Powerups[i];
     }
 }
