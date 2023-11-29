@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Server{
     static final int portNumber = 5555;
-    private static final ScheduledExecutorService scheduledThreadPoolExecutor = Executors.newScheduledThreadPool(10);
 
     static final int WIDTH = 800;
     static final int HEIGHT = 600;
@@ -85,10 +84,10 @@ public class Server{
         //creo la palla e la inizializzo in base al player a cui va assegnata
         Ball ball;
         if (id == 0) {
-            ball = new Ball(WIDTH / 2, HEIGHT / 2);
+            ball = new Ball(WIDTH / 2, (HEIGHT / 2)+100);
         }
         else {
-            ball = new Ball(WIDTH / 2, HEIGHT / 2);
+            ball = new Ball(WIDTH / 2, (HEIGHT / 2)-100);
         }
         ball.setOwner(id);
         balls.add(ball);
@@ -107,13 +106,12 @@ public class Server{
                 // messaggio da mandare al client
                 String output = "";
                 //se la stringa inizia con 1 sono informazioni Paddle
+                //output += getPaddles();
                 for (Paddle p : paddles) {
                     output += "1,"+p.getId()+","+p.getX()+","+p.getY()+","+p.WIDTH+","+p.HEIGHT+";";
                 }
                 //se la stringa inizia con 2 sono informazioni Ball
-                for (Ball b : balls) {
-                    output += "2,"+b.getId()+","+b.getX()+","+b.getY()+","+b.SIZE+","+b.getOwner()+";";
-                }
+                output += getBalls();
                 //se la stringa inizia con 3 sono informazioni Brick
                 output += getBricks();
 
@@ -124,7 +122,7 @@ public class Server{
 
                 writer.println(output);
                 inputLine = "";
-                doPause(15);
+                try {Thread.sleep(15);} catch (Exception e) {throw new RuntimeException();}
             }
             //se finiscono i mattoni finisce la partita
             if (checkMattoni()) {
@@ -181,33 +179,27 @@ public class Server{
         //}
         
         // Verifica collisione con i mattoni
-        for (Brick brick : bricks) {
-            boolean collisionBOnX = false;
-            boolean collisionBOnY = false;
-            //ritorna il rettangolo creato dall'intersezione
-            Rectangle br = ball.getBounds().intersection(brick.getBounds());
-            //se il rettangolo dell'intersezione ha la larghezza più grande dell'altezza è una collisione orizzontale
-
-            if (br.width >= br.height) {
-                collisionBOnX = true;
-            }else if(br.width < br.height){
-                collisionBOnY = true;
-            }
-
-            if (collisionBOnX) {
-                // Collisione lungo l'asse X
-                brick.setHp(brick.getHp()-1);
-                ball.reverseX();
-            }
-        
-            if (collisionBOnY) {
-                // Collisione lungo l'asse Y
-                brick.setHp(brick.getHp()-1);
-                ball.reverseY();
-            }
-            //TODO : Decidere punteggio
-            if (collisionBOnX || collisionBOnY) {
-                if (brick.getHp() <= 0) {
+        if (ball.getBounds().intersects(paddle.getBounds())) {
+            for (Brick brick : bricks) {
+                boolean collisionOnX = Math.abs(ball.getBounds().getCenterX() - brick.getBounds().getCenterX()) 
+                                    < (ball.getBounds().getWidth() + brick.getBounds().getWidth()) / 2;
+                boolean collisionOnY = Math.abs(ball.getBounds().getCenterY() - brick.getBounds().getCenterY()) 
+                                    < (ball.getBounds().getHeight() + brick.getBounds().getHeight()) / 2;
+            
+                if (collisionOnX) {
+                    // Collisione lungo l'asse X
+                    brick.setHp(brick.getHp()-1);
+                    ball.reverseX();
+                }
+            
+                if (collisionOnY) {
+                    // Collisione lungo l'asse Y
+                    brick.setHp(brick.getHp()-1);
+                    ball.reverseY();
+                }
+                //TODO : Decidere punteggio
+                if (collisionOnX || collisionOnY) {
+                if (brick.getHp() == 0) {
                     paddle.setScore(paddle.getScore()+ 100);
 
                     String powerUp = PowerUp.RollaPowerup();
@@ -242,15 +234,22 @@ public class Server{
         }
     }
 
-    //serve per bloccare l'esecuzione del thread in modo da mandare le informazioni al client non troppo veloci
-    private static void doPause(int ms) {
-        try {
-            scheduledThreadPoolExecutor.schedule(() -> {
-            }, ms, TimeUnit.MILLISECONDS).get();
-        } catch (Exception e) {
-            throw new RuntimeException();
+    /*private static synchronized String getPaddles() {
+        String output = "";
+        for (Paddle p : paddles) {
+            output += "1,"+p.getId()+","+p.getX()+","+p.getY()+","+p.WIDTH+","+p.HEIGHT+";";
         }
+        return output;
+    }*/
+
+    private static synchronized String getBalls() {
+        String output = "";
+        for (Ball b : balls) {
+            output += "2,"+b.getId()+","+b.getX()+","+b.getY()+","+b.SIZE+","+b.getOwner()+";";
+        }
+        return output;
     }
+
     //crea la stringa con le informazioni dei brick da mandare al client per la stampa
     private static synchronized String getBricks() {
         String output = "";
