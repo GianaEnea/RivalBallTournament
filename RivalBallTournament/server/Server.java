@@ -199,11 +199,12 @@ public class Server{
                 }
                 //TODO : Decidere punteggio
                 if (collisionOnX || collisionOnY) {
-                if (brick.getHp() == 0) {
-                    paddle.setScore(paddle.getScore()+ 100);
+                    if (brick.getHp() == 0) {
+                        paddle.setScore(paddle.getScore()+ 100);
 
-                    String powerUp = PowerUp.RollaPowerup();
-                    Powerups.add(new PowerUp(powerUp, paddle.getId(), brick.getX(), brick.getY()));
+                        String powerUp = PowerUp.RollaPowerup();
+                        Powerups.add(new PowerUp(powerUp, paddle.getId(), brick.getX(), brick.getY()));
+                    }
                 }
             }
         }
