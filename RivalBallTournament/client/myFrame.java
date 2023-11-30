@@ -1,3 +1,5 @@
+package RivalBallTournament.client;
+
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -7,7 +9,7 @@ public class myFrame extends JFrame{
 
     public myPanel panel;
     public boolean isMouseClicked = false;
-    public int mousePosition = WIDTH / 2 - 100 / 2;
+    public int mousePosition = client.WIDTH / 2 - 100 / 2;
 
     public myFrame() {
         panel = new myPanel();

@@ -49,8 +49,8 @@ public class Paddle {
         // Limita il movimento del paddle all'interno della finestra
         if (x < 0) {
             x = 0;
-        } else if (x > Server.WIDTH - WIDTH) {
-            x = Server.WIDTH - WIDTH;
+        } else if (x > fatherHandler.WIDTH - WIDTH) {
+            x = fatherHandler.WIDTH - WIDTH;
         }
     }
 }

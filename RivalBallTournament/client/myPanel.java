@@ -1,3 +1,5 @@
+package RivalBallTournament.client;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -6,15 +8,13 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 public class myPanel extends JPanel{
-    static final int WIDTH = 800;
-    static final int HEIGHT = 600;
 
     public boolean gameOverFlag = false;
 
     private String[] oggetiDaStampare;
 
     public myPanel() {
-        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.setPreferredSize(new Dimension(client.WIDTH, client.HEIGHT));
         this.setBackground(Color.WHITE);
     }
 

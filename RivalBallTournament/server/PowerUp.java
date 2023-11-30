@@ -3,21 +3,30 @@ package RivalBallTournament.server;
 import java.util.Random;
 
 public class PowerUp {
-    public String id;
+    public int id;
     public int spownedBy;
+    public int type;
     public int x, y;
     public int speed = 1;
     public static final int SIZE = 20;
-    //lista dei powerUp
-    public static String[] Powerups = {"BallBig", "BallSmall", "PaddleBig", "PaddleSmall", "BallDamage", "BallSlow", "BallFast"};
+    
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
 
     public int getSpownedBy() {
         return spownedBy;
@@ -43,8 +52,8 @@ public class PowerUp {
         this.y = y;
     }
 
-    public PowerUp(String id, int spownedBy, int x, int y) {
-        this.id = id;
+    public PowerUp(int type, int spownedBy, int x, int y) {
+        this.type = type;
         this.spownedBy = spownedBy;
         this.x = x;
         this.y = y;
@@ -61,10 +70,10 @@ public class PowerUp {
         }
         y += speed;
     }
-    //restituisce la stringa con il nome di un powerUp
-    public static String RollaPowerup(){
+
+    //restituisce la posizione del powerUp nell'array dei powerUp
+    public static int RollaPowerup(){
         Random r = new Random();
-        int i = r.nextInt(Powerups.length);
-        return Powerups[i];
+        return r.nextInt(fatherHandler.Powerups.length);
     }
 }

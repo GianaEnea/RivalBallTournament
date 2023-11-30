@@ -10,7 +10,8 @@ public class Brick {
     //quante volte può essere colpito prima di rompersi
     private int hp = 3;
 
-    public Brick(int x, int y) {
+    public Brick(int id, int x, int y) {
+        this.id = id;
         this.x = x;
         this.y = y;
     }
