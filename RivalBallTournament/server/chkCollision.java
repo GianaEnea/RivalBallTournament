@@ -64,6 +64,17 @@ public class chkCollision implements Runnable{
                                 p.setScore(100);
                         }
                     }
+
+                    if (f.powerUps.size() != 0) {
+                        new Thread(() -> {
+                            for (PowerUp pow : f.powerUps) {
+                                if(f.paddles.get(pow.getSpownedBy()).getBounds().intersects(pow.getBounds())) {
+                                    f.applyPowerUp(pow);
+                                }
+                            }
+
+                        }).start();
+                    }
                 }
             }).start();
         }
@@ -75,7 +86,7 @@ public class chkCollision implements Runnable{
                     new Thread(() -> {
                         while (!f.gameOverFlag) {
                             Ball tempB = new Ball(b.getX()+b.getxSpeed(), b.getY()+b.getySpeed());
-                            String[] bricksS = f.useBricksList(0, null).split(";");
+                            String[] bricksS = f.useBricksList(0, null, null).split(";");
                             for (String brick : bricksS) {
                                 String[] bricklet = brick.split(",");
                                 Brick brk = new Brick(Integer.parseInt(bricklet[1]), Integer.parseInt(bricklet[2]), Integer.parseInt(bricklet[3]));
@@ -99,7 +110,7 @@ public class chkCollision implements Runnable{
 
                                     if (collisionOnX || collisionOnY) {
                                         new Thread(() -> {
-                                            f.useBricksList(1, brk);
+                                            f.useBricksList(1, brk, b);
                                         }).start();
                                         f.paddles.get(b.getOwner()).setScore(10);
                                         break;
@@ -130,14 +141,3 @@ public class chkCollision implements Runnable{
         chkEnding.start();
     }
 }
-
-
-/*
-int powerUp = PowerUp.RollaPowerup();
-if (powerUp != 0) {
-f.powerUps.add(new PowerUp(powerUp, f.paddles.get(b.getOwner()).getId(), brick.getX(), brick.getY()));
-}
-}
-break;
-}
-*/

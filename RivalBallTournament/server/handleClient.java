@@ -64,7 +64,7 @@ public class handleClient implements Runnable{
                 //se la stringa inizia con 2 sono informazioni Ball
                 output += f.getBalls();
                 //se la stringa inizia con 3 sono informazioni Brick
-                output += f.useBricksList(0, null);
+                output += f.useBricksList(0, null, null);
                 //se la stringa inizia con 4 sono informazioni PowerUp
                 output+= f.getPowerUps();
                 writer.println(output);

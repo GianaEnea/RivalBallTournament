@@ -113,25 +113,29 @@ public class fatherHandler {
         }
     }
 
-    private synchronized void modifyBrick(Brick brk) {
+    private synchronized void modifyBrick(Brick brk, Ball b) {
         bricks.get(brk.getId()).setHp(bricks.get(brk.getId()).getHp() - 1);
         if (bricks.get(brk.getId()).getHp() == 0) {
-            bricks.remove(bricks.get(brk.getId()));
-            for (Brick b : bricks) {
-                if (b.getId() >= brk.getId()) {
-                    b.setId(b.getId()-1);
+            int powerUp = PowerUp.RollaPowerup();
+            if (powerUp != 0) {
+                powerUps.add(new PowerUp(powerUp, paddles.get(b.getOwner()).getId(), brk.getX(), brk.getY()));
             }
-        }
+            bricks.remove(bricks.get(brk.getId()));
+            for (Brick brick : bricks) {
+                if (brick.getId() >= brk.getId()) {
+                    brick.setId(brick.getId()-1);
+                }
+            }
         }
     }
 
-    public synchronized String useBricksList(int useCase, Brick brk) {
+    public synchronized String useBricksList(int useCase, Brick brk, Ball b) {
         switch (useCase) {
             case 0:
                 return getBricks();
         
             case 1:
-                modifyBrick(brk);
+                modifyBrick(brk, b);
                 return "ok";
 
             default:
@@ -145,7 +149,7 @@ public class fatherHandler {
             case "BallBig":
                 for (Ball ball : balls) {
                     if (ball.getOwner() == p.spownedBy) {
-                        ball.setSize() += 10;
+                        ball.setSize(ball.getSize()+10);
                     }
                 }
                 break;
@@ -153,7 +157,7 @@ public class fatherHandler {
             case "BallSmall":
                 for (Ball ball : balls) {
                     if (ball.getOwner() == p.spownedBy) {
-                        ball.size -= 10;
+                        ball.setSize(ball.getSize()-10);
                     }
                 }
                 break;

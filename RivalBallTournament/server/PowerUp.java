@@ -1,5 +1,6 @@
 package RivalBallTournament.server;
 
+import java.awt.Rectangle;
 import java.util.Random;
 
 public class PowerUp {
@@ -78,5 +79,9 @@ public class PowerUp {
             return 0;
         }
         return (r.nextInt(fatherHandler.powerUpsList.length-1))+1;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, SIZE, SIZE);
     }
 }
