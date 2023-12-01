@@ -33,6 +33,7 @@ public class handleClient implements Runnable{
         Ball ball;
         if (player == 0) {
             ball = new Ball(f.WIDTH / 2, f.HEIGHT - 100);
+            ball.reverseY();
         }
         else {
             ball = new Ball(f.WIDTH / 2, 100);
@@ -63,12 +64,12 @@ public class handleClient implements Runnable{
                 //se la stringa inizia con 2 sono informazioni Ball
                 output += f.getBalls();
                 //se la stringa inizia con 3 sono informazioni Brick
-                output += f.getBricks();
+                output += f.useBricksList(0, null);
                 //se la stringa inizia con 4 sono informazioni PowerUp
                 output+= f.getPowerUps();
                 writer.println(output);
                 
-                try {Thread.sleep(15);} catch (Exception e) {throw new RuntimeException();}
+                try {Thread.sleep(30);} catch (Exception e) {throw new RuntimeException();}
             }
             //se la stringa inizia con 9 finisce il gioco
             String results = "9";

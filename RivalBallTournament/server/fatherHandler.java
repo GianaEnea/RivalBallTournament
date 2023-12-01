@@ -48,6 +48,7 @@ public class fatherHandler {
 
         t1.start();
         t2.start();
+        try {Thread.sleep(5);} catch (InterruptedException e) {e.printStackTrace();}
         tchk.start();
     }
 
@@ -61,17 +62,18 @@ public class fatherHandler {
 
     public synchronized String getBalls() {
         String output = "";
-        for (Ball b : balls) {
-            output += "2,"+b.getId()+","+b.getX()+","+b.getY()+","+b.SIZE+","+b.getOwner()+";";
+        ArrayList<Ball> tempBalls = balls;
+        for (Ball b : tempBalls) {
+            output += "2,"+b.getId()+","+b.getX()+","+b.getY()+","+b.getSize()+","+b.getOwner()+";";
         }
         return output;
     }
 
     //crea la stringa con le informazioni dei brick da mandare al client per la stampa
-    public synchronized String getBricks() {
+    private synchronized String getBricks() {
         String output = "";
         for (Brick b : bricks) {
-            if (b.getHp() != 0) {
+            if (b.getHp() > 0) {
                 output += "3,"+b.getId()+","+b.getX()+","+b.getY()+","+b.WIDTH+","+b.HEIGHT+","+b.getHp()+";";
             }
         }
@@ -103,11 +105,38 @@ public class fatherHandler {
         chkPowerUps();
     }
 
-    public void chkPowerUps() {
+    public synchronized void chkPowerUps() {
         if (powerUps.size() != 0) {
             for (PowerUp p : powerUps) {
                 p.fall();
             }
         }
+    }
+
+    private synchronized void modifyBrick(Brick brk) {
+        bricks.get(brk.getId()).setHp(bricks.get(brk.getId()).getHp() - 1);
+        if (bricks.get(brk.getId()).getHp() == 0) {
+            bricks.remove(bricks.get(brk.getId()));
+            for (Brick b : bricks) {
+                if (b.getId() >= brk.getId()) {
+                    b.setId(b.getId()-1);
+            }
+        }
+        }
+    }
+
+    public synchronized String useBricksList(int useCase, Brick brk) {
+        switch (useCase) {
+            case 0:
+                return getBricks();
+        
+            case 1:
+                modifyBrick(brk);
+                return "ok";
+
+            default:
+                return "null";
+        }
+        
     }
 }

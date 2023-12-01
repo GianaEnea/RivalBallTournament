@@ -12,126 +12,132 @@ public class chkCollision implements Runnable{
     //controlla tutte le collisioni necessarie
     @Override
     public void run() {
+        for (Ball b : f.balls) {
+            new Thread(() -> {
+                while (!f.gameOverFlag) {
+                    Ball tempB = new Ball(b.getX()+b.getxSpeed(), b.getY()+b.getySpeed());
+                    for (Paddle p : f.paddles) {
+                        if (tempB.getBounds().intersects(p.getBounds())) {
+                            boolean collisionOnX = false;
+                            boolean collisionOnY = false;
+                            Rectangle r = tempB.getBounds().intersection(p.getBounds());
+                            //se il rettangolo dell'intersezione ha la larghezza più grande dell'altezza è una collisione orizzontale
+                            if (r.width > r.height) {
+                                collisionOnX = true;
+                                b.reverseY();
+                            }else if(r.width < r.height){
+                                collisionOnY = true;
+                                b.reverseX();
+                            }else if (r.width == r.height) {
+                                collisionOnX = true;
+                                collisionOnY = true;
+                                b.reverseY();
+                                b.reverseX();
+                            }
 
-        // Verifica collisione con il paddle
-        Thread chkPaddles = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (Ball b : f.balls) {
-                    new Thread(() -> {
-                        while (!f.gameOverFlag) {
-                            for (Paddle p : f.paddles) {
-                                if (b.getBounds().intersects(p.getBounds())) {
-                                    boolean collisionPOnX = false;
-                                    boolean collisionPOnY = false;
-                                    //ritorna il rettangolo creato dall'intersezione
-                                    Rectangle pr = b.getBounds().intersection(p.getBounds());
-                                    //se il rettangolo dell'intersezione ha la larghezza più grande dell'altezza è una collisione orizzontale
-                                    if (pr.width > pr.height && pr.width >= 0 && pr.height >= 0) {
-                                        collisionPOnX = true;
-                                    }else if(pr.width < pr.height && pr.width >= 0 && pr.height >= 0){
-                                        collisionPOnY = true;
-                                    }
-                                
-                                    if (collisionPOnX || collisionPOnY) {
-                                        if (b.getOwner() != p.getId()) {
-                                            b.changeOwner();
-                                        }
-                                    }
+                            if (collisionOnX || collisionOnY) {
+                                if (b.getOwner() != p.getId()) {
+                                    p.setScore(20);
                                 }
                             }
-                            //Thread.sleep(2);
                         }
-                    }).start();
+                    }
+                    
+                    
+                    if (tempB.getX() <= 0 || tempB.getX() >= f.WIDTH - b.getSize())
+                        b.reverseX();
+                    
+                    if (tempB.getY() <= 0) {
+                        b.reverseY();
+                        //b.reset();
+                        for (Paddle p : f.paddles) {
+                            if (p.getId() == 0)
+                                p.setScore(100);
+                        }
+                    }
+                    
+                    if (tempB.getY() >= f.HEIGHT- b.getSize()) {
+                        b.reverseY();
+                        //b.reset();
+                        for (Paddle p : f.paddles) {
+                            if (p.getId() == 1)
+                                p.setScore(100);
+                        }
+                    }
                 }
-            }
-        });
-
-        // Verifica collisione con i mattoni
+            }).start();
+        }
+        
         Thread chkBricks = new Thread(new Runnable() {
             @Override
             public void run() {
                 for (Ball b : f.balls) {
                     new Thread(() -> {
                         while (!f.gameOverFlag) {
-                            for (Brick brick : f.bricks) {
-                                if (b.getBounds().intersects(brick.getBounds())) {
-                                    boolean collisionOnX = Math.abs(b.getBounds().getCenterX() - brick.getBounds().getCenterX()) 
-                                                        < (b.getBounds().getWidth() + brick.getBounds().getWidth()) / 2;
-                                    boolean collisionOnY = Math.abs(b.getBounds().getCenterY() - brick.getBounds().getCenterY()) 
-                                                        < (b.getBounds().getHeight() + brick.getBounds().getHeight()) / 2;
-                                
-                                    if (collisionOnX) {
-                                        // Collisione lungo l'asse X
-                                        brick.setHp(brick.getHp()-1);
-                                        b.reverseX();
-                                    }
-                                
-                                    if (collisionOnY) {
-                                        // Collisione lungo l'asse Y
-                                        brick.setHp(brick.getHp()-1);
+                            Ball tempB = new Ball(b.getX()+b.getxSpeed(), b.getY()+b.getySpeed());
+                            String[] bricksS = f.useBricksList(0, null).split(";");
+                            for (String brick : bricksS) {
+                                String[] bricklet = brick.split(",");
+                                Brick brk = new Brick(Integer.parseInt(bricklet[1]), Integer.parseInt(bricklet[2]), Integer.parseInt(bricklet[3]));
+                                if(tempB.getBounds().intersects(brk.getBounds())) {
+                                    boolean collisionOnX = false;
+                                    boolean collisionOnY = false;
+
+                                    Rectangle r = tempB.getBounds().intersection(brk.getBounds());
+                                    if (r.width > r.height) {
+                                        collisionOnX = true;
                                         b.reverseY();
+                                    }else if(r.width < r.height){
+                                        collisionOnY = true;
+                                        b.reverseX();
+                                    }else if (r.width == r.height) {
+                                        collisionOnX = true;
+                                        collisionOnY = true;
+                                        b.reverseY();
+                                        b.reverseX();
                                     }
 
                                     if (collisionOnX || collisionOnY) {
+                                        new Thread(() -> {
+                                            f.useBricksList(1, brk);
+                                        }).start();
                                         f.paddles.get(b.getOwner()).setScore(10);
-                                        if (brick.getHp() == 0) {
-                                            f.bricks.remove(brick.getId());
-                                            f.paddles.get(b.getOwner()).setScore(40);
-
-                                            int powerUp = PowerUp.RollaPowerup();
-                                            if (powerUp != 0) {
-                                                f.powerUps.add(new PowerUp(powerUp, f.paddles.get(b.getOwner()).getId(), brick.getX(), brick.getY()));
-                                            }
-                                        }
+                                        break;
                                     }
                                 }
                             }
-                            //Thread.sleep(2);
                         }
                     }).start();
                 }
+                
             }
         });
 
-        // Verifica collisione con i bordi
-        Thread chkBorders = new Thread(new Runnable() {
+        // Verifica se è finitio il gioco
+        Thread chkEnding = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (Ball b : f.balls) {
-                    new Thread(() -> {
-                        while (!f.gameOverFlag) {
-                            if (b.getX() <= 0 || b.getX() >= f.WIDTH - Ball.SIZE) {
-                                b.reverseX();
-                            }
-
-                            if (b.getY() <= 0) {
-                                b.reverseY();
-                                if (b.getOwner() == f.paddles.get(1).getId()) {
-                                    f.paddles.get(1).setScore(100);
-                                }
-                            }
-
-                            if (b.getY() >= f.HEIGHT) {
-                                b.reverseY();
-                                if (b.getOwner() == f.paddles.get(0).getId()) {
-                                    f.paddles.get(0).setScore(100);
-                                }
-                            }
-
-                            //verifica se la partita è finita
-                            if (f.bricks.size() == 0) {
-                                f.gameOverFlag = true;
-                            }
-                            //Thread.sleep(2);
-                        }
-                    }).start();
+                while (!f.gameOverFlag) {
+                    if (f.bricks.size() == 0) {
+                        f.gameOverFlag = true;
+                    }
+                    try {Thread.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
                 }
             }
         });
         
-        chkPaddles.start();
         chkBricks.start();
-        chkBorders.start();
+        chkEnding.start();
     }
 }
+
+
+/*
+int powerUp = PowerUp.RollaPowerup();
+if (powerUp != 0) {
+f.powerUps.add(new PowerUp(powerUp, f.paddles.get(b.getOwner()).getId(), brick.getX(), brick.getY()));
+}
+}
+break;
+}
+*/

@@ -84,6 +84,9 @@ public class myPanel extends JPanel{
                 }
             }
         }
+        else {
+            drawWhaitRoom(g2D);
+        }
     }
 
     public void drawPaddle(Graphics2D g, int x, int y, int width, int height, int id) {
@@ -157,5 +160,10 @@ public class myPanel extends JPanel{
         g.setColor(Color.RED);
         g.drawString(String.valueOf(score2), 100, 200);
         gameOverFlag = true;
+    }
+
+    public void drawWhaitRoom(Graphics2D g) {
+        g.setColor(Color.BLACK);
+        g.drawString(String.valueOf("Whaiting for adversary..."), 400, 400);
     }
 }
