@@ -3,8 +3,8 @@ package RivalBallTournament.server;
 import java.awt.*;
 
 public class Paddle {
-    public static final int WIDTH = 150;
-    public static final int HEIGHT = 15;
+    public static int WIDTH = 150;
+    public static int HEIGHT = 15;
     //che player sta usando la paddle
     private int id;
     private int score = 0;

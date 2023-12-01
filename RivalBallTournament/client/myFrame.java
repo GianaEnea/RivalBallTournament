@@ -1,5 +1,3 @@
-package RivalBallTournament.client;
-
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -13,7 +11,7 @@ public class myFrame extends JFrame{
 
     public myFrame() {
         panel = new myPanel();
-
+        //listener per la posizione del mouse e il click
         panel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {}
@@ -39,7 +37,7 @@ public class myFrame extends JFrame{
                }
         });
 
-
+        //settaggio delle inpostazioni della finestra
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(panel);
         this.pack();

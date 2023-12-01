@@ -1,5 +1,3 @@
-package RivalBallTournament.client;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,15 +10,15 @@ import javax.swing.JPanel;
 public class myPanel extends JPanel{
 
     public boolean gameOverFlag = false;
-
+    //lista di oggetti mandati del server da stampare
     private String[] oggetiDaStampare;
 
     Image[] image = new Image[7];
-
+    
     public myPanel() {
         this.setPreferredSize(new Dimension(client.WIDTH, client.HEIGHT));
         this.setBackground(Color.WHITE);
-
+        //immagini de applicare agli oggetti
         image[0] = new ImageIcon("./img/BallBig.png").getImage();
         image[1] = new ImageIcon("./img/BallSmall.png").getImage();
         image[2] = new ImageIcon("./img/PaddleBig.png").getImage();
@@ -33,11 +31,11 @@ public class myPanel extends JPanel{
     public void setData(String[] data){
         oggetiDaStampare = data;
     }
-
+    //crea un thread che si occupa di creare i frame da stampare
     public void Start(){
         new Thread(() -> draw()).start();
     }
-
+    //disegno ogni 30 millisendi
     public void draw() {
         while (!gameOverFlag) {
             repaint();
@@ -53,7 +51,7 @@ public class myPanel extends JPanel{
     public void paint(Graphics g) {
         super.paint(g); //colora lo sfondo
         Graphics2D g2D = (Graphics2D) g;
-
+        //scorro la lista degli oggetti da stampare e in base al primo campo capisco che oggetto è o lo stampo
         if (oggetiDaStampare != null) {
             String[] data;
             for (String obj : oggetiDaStampare) {
@@ -85,6 +83,8 @@ public class myPanel extends JPanel{
             }
         }
     }
+    //tutti i metodi per disegnare i vari oggetti del gioco
+
 
     public void drawPaddle(Graphics2D g, int x, int y, int width, int height, int id) {
         if (id == 0)

@@ -110,4 +110,71 @@ public class fatherHandler {
             }
         }
     }
+    //applica lo stato del powerUp
+    public void applyPowerUp(PowerUp p){
+        switch (powerUpsList[p.type]) {
+            case "BallBig":
+                for (Ball ball : balls) {
+                    if (ball.getOwner() == p.spownedBy) {
+                        ball.SIZE += 10;
+                    }
+                }
+                break;
+            
+            case "BallSmall":
+                for (Ball ball : balls) {
+                    if (ball.getOwner() == p.spownedBy) {
+                        ball.SIZE -= 10;
+                    }
+                }
+                break;
+            
+            case "PaddleBig":
+                for (Paddle paddle : paddles) {
+                    if (paddle.getId() == p.spownedBy) {
+                        paddle.WIDTH += 10;
+                    }
+                }
+                break;
+
+            case "PaddleSmall":
+                for (Paddle paddle : paddles) {
+                    if (paddle.getId() == p.spownedBy) {
+                        paddle.WIDTH -= 10;
+                    }
+                }
+                break;
+            
+            case "BallDamage":
+                for (Ball ball : balls) {
+                    if (ball.getOwner() == p.spownedBy) {
+                        ball.setDamage(3);
+                    }
+                }
+                break;
+
+            case "BallSlow":
+                for (Ball ball : balls) {
+                    if (ball.getOwner() == p.spownedBy) {
+                        if (ball.getxSpeed() <= 10) {
+                           ball.setxSpeed(ball.getxSpeed()+2); 
+                        }
+                        
+                    }
+                }
+                break;
+            
+            case "BallFast":
+                for (Ball ball : balls) {
+                    if (ball.getOwner() == p.spownedBy) {
+                        if (ball.getxSpeed() >= 3) {
+                           ball.setxSpeed(ball.getxSpeed()-2); 
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }
