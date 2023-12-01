@@ -64,17 +64,18 @@ public class chkCollision implements Runnable{
                                 p.setScore(100);
                         }
                     }
-
+                    /*
                     if (f.powerUps.size() != 0) {
                         new Thread(() -> {
                             for (PowerUp pow : f.powerUps) {
                                 if(f.paddles.get(pow.getSpownedBy()).getBounds().intersects(pow.getBounds())) {
                                     f.applyPowerUp(pow);
+                                    f.powerUps.remove(pow);
                                 }
                             }
 
                         }).start();
-                    }
+                    }*/
                 }
             }).start();
         }

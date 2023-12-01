@@ -102,7 +102,7 @@ public class fatherHandler {
         String[] input = inputLine.split(";");
         paddles.get(id).move(Integer.parseInt(input[0]));
         balls.get(id).move();
-        chkPowerUps();
+        //chkPowerUps();
     }
 
     public synchronized void chkPowerUps() {
