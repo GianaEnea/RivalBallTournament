@@ -7,17 +7,17 @@ public class fatherHandler {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
 
-    public static ArrayList<Paddle> paddles;
-    public static ArrayList<Ball> balls;
-    public static ArrayList<Brick> bricks;
-    public static ArrayList<PowerUp> powerUps;
+    public ArrayList<Paddle> paddles;
+    public ArrayList<Ball> balls;
+    public ArrayList<Brick> bricks;
+    public ArrayList<PowerUp> powerUps;
 
     //lista dei powerUp
-    public static String[] Powerups = {"BallBig", "BallSmall", "PaddleBig", "PaddleSmall", "BallDamage", "BallSlow", "BallFast"};
+    public static String[] powerUpsList = {"NULL","BallBig", "BallSmall", "PaddleBig", "PaddleSmall", "BallDamage", "BallSlow", "BallFast"};
 
     public Socket[] playersSockets;
 
-    public static boolean gameOverFlag = false;
+    public boolean gameOverFlag = false;
 
     public fatherHandler(Socket[] sockets){
         playersSockets= new Socket[2];
@@ -51,7 +51,7 @@ public class fatherHandler {
         tchk.start();
     }
 
-    public static synchronized String getPaddles() {
+    public synchronized String getPaddles() {
         String output = "";
         for (Paddle p : paddles) {
             output += "1,"+p.getId()+","+p.getX()+","+p.getY()+","+p.WIDTH+","+p.HEIGHT+";";
@@ -59,7 +59,7 @@ public class fatherHandler {
         return output;
     }
 
-    public static synchronized String getBalls() {
+    public synchronized String getBalls() {
         String output = "";
         for (Ball b : balls) {
             output += "2,"+b.getId()+","+b.getX()+","+b.getY()+","+b.SIZE+","+b.getOwner()+";";
@@ -68,7 +68,7 @@ public class fatherHandler {
     }
 
     //crea la stringa con le informazioni dei brick da mandare al client per la stampa
-    public static synchronized String getBricks() {
+    public synchronized String getBricks() {
         String output = "";
         for (Brick b : bricks) {
             if (b.getHp() != 0) {
@@ -78,13 +78,13 @@ public class fatherHandler {
         return output;
     }
 
-    public static synchronized String getPowerUps() {
+    public synchronized String getPowerUps() {
         String output = "";
         int count = 0;
         if (powerUps.size() != 0) {
             for (PowerUp p : powerUps) {
                 count++;
-                output += "2,"+p.getId()+","+p.getX()+","+p.getY()+","+p.SIZE+","+p.getSpownedBy()+";";
+                output += "2,"+p.getId()+","+powerUpsList[p.type]+","+p.getX()+","+p.getY()+","+p.SIZE+","+p.getSpownedBy()+";";
                 if (count != powerUps.size()) 
                         output += ";";
             }
@@ -96,9 +96,18 @@ public class fatherHandler {
     }
 
     //aggiorna le posizioni di paddle e palla
-    public static synchronized void update(String inputLine, int id) {
+    public synchronized void update(String inputLine, int id) {
         String[] input = inputLine.split(";");
         paddles.get(id).move(Integer.parseInt(input[0]));
         balls.get(id).move();
+        chkPowerUps();
+    }
+
+    public void chkPowerUps() {
+        if (powerUps.size() != 0) {
+            for (PowerUp p : powerUps) {
+                p.fall();
+            }
+        }
     }
 }

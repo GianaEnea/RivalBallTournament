@@ -80,7 +80,9 @@ public class chkCollision implements Runnable{
                                             f.paddles.get(b.getOwner()).setScore(40);
 
                                             int powerUp = PowerUp.RollaPowerup();
-                                            f.powerUps.add(new PowerUp(powerUp, f.paddles.get(b.getOwner()).getId(), brick.getX(), brick.getY()));
+                                            if (powerUp != 0) {
+                                                f.powerUps.add(new PowerUp(powerUp, f.paddles.get(b.getOwner()).getId(), brick.getX(), brick.getY()));
+                                            }
                                         }
                                     }
                                 }
@@ -92,6 +94,7 @@ public class chkCollision implements Runnable{
             }
         });
 
+        // Verifica collisione con i bordi
         Thread chkBorders = new Thread(new Runnable() {
             @Override
             public void run() {

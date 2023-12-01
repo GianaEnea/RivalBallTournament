@@ -32,10 +32,10 @@ public class handleClient implements Runnable{
         //creo la palla e la inizializzo in base al player a cui va assegnata
         Ball ball;
         if (player == 0) {
-            ball = new Ball(f.WIDTH / 2, (f.HEIGHT / 2)+100);
+            ball = new Ball(f.WIDTH / 2, f.HEIGHT - 100);
         }
         else {
-            ball = new Ball(f.WIDTH / 2, (f.HEIGHT / 2)-100);
+            ball = new Ball(f.WIDTH / 2, 100);
         }
         ball.setOwner(player);
         f.balls.add(ball);
@@ -70,7 +70,6 @@ public class handleClient implements Runnable{
                 
                 try {Thread.sleep(15);} catch (Exception e) {throw new RuntimeException();}
             }
-            //TODO: manda stats, vanno mandate le stats di entrambe le Paddle
             //se la stringa inizia con 9 finisce il gioco
             String results = "9";
             for (Paddle p : f.paddles) {

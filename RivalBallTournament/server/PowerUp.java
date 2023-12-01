@@ -74,6 +74,9 @@ public class PowerUp {
     //restituisce la posizione del powerUp nell'array dei powerUp
     public static int RollaPowerup(){
         Random r = new Random();
-        return r.nextInt(fatherHandler.Powerups.length);
+        if (r.nextBoolean()) {
+            return 0;
+        }
+        return (r.nextInt(fatherHandler.powerUpsList.length-1))+1;
     }
 }

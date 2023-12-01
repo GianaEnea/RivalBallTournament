@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class myPanel extends JPanel{
@@ -13,11 +15,21 @@ public class myPanel extends JPanel{
 
     private String[] oggetiDaStampare;
 
+    Image[] image = new Image[7];
+
     public myPanel() {
         this.setPreferredSize(new Dimension(client.WIDTH, client.HEIGHT));
         this.setBackground(Color.WHITE);
-    }
 
+        image[0] = new ImageIcon("./img/BallBig.png").getImage();
+        image[1] = new ImageIcon("./img/BallSmall.png").getImage();
+        image[2] = new ImageIcon("./img/PaddleBig.png").getImage();
+        image[3] = new ImageIcon("./img/PaddleSmall.png").getImage();
+        image[4] = new ImageIcon("./img/BallDamage.png").getImage();
+        image[5] = new ImageIcon("./img/BallSlow.png").getImage();
+        image[6] = new ImageIcon("./img/BallFast.png").getImage();
+    }
+    
     public void setData(String[] data){
         oggetiDaStampare = data;
     }
@@ -59,7 +71,7 @@ public class myPanel extends JPanel{
                         break;
                         
                     case "4"://PowerUp
-                        
+                        drawPowerUps(g2D, data[2], Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5]));
                         break;
 
                     case "9": //GameOver
@@ -100,6 +112,43 @@ public class myPanel extends JPanel{
             g.setColor(Color.ORANGE);
 
         g.fillRect(x, y, width, height);
+    }
+
+    public void drawPowerUps(Graphics2D g, String type, int x, int y, int size) {
+        //"BallBig", "BallSmall", "PaddleBig", "PaddleSmall", "BallDamage", "BallSlow", "BallFast"
+        switch (type) {
+            case "BallBig"://Paddle
+                g.drawImage(image[0], x, y, null);
+                break;
+            case "BallSmall"://Ball
+                g.drawImage(image[1], x, y, null);
+                break;
+
+            case "PaddleBig"://Brick
+                g.drawImage(image[2], x, y, null);
+                break;
+                
+            case "PaddleSmall"://PowerUp
+                g.drawImage(image[3], x, y, null);
+                break;
+
+            case "BallDamage": //GameOver
+                g.drawImage(image[4], x, y, null);
+                break;
+
+            case "BallSlow": //GameOver
+                g.drawImage(image[5], x, y, null);
+                break;
+            
+            case "BallFast": //GameOver
+                g.drawImage(image[6], x, y, null);
+                break;
+
+            default:
+            //nulla
+                break;
+        }
+        g.fillRect(x, y, size, size);
     }
 
     public void gameOver(Graphics2D g, int id1, int score1, int id2, int score2) {
