@@ -116,10 +116,10 @@ public class fatherHandler {
     private synchronized void modifyBrick(Brick brk, Ball b) {
         bricks.get(brk.getId()).setHp(bricks.get(brk.getId()).getHp() - 1);
         if (bricks.get(brk.getId()).getHp() == 0) {
-            int powerUp = PowerUp.RollaPowerup();
+            /*int powerUp = PowerUp.RollaPowerup();
             if (powerUp != 0) {
                 powerUps.add(new PowerUp(powerUp, paddles.get(b.getOwner()).getId(), brk.getX(), brk.getY()));
-            }
+            }*/
             bricks.remove(bricks.get(brk.getId()));
             for (Brick brick : bricks) {
                 if (brick.getId() >= brk.getId()) {

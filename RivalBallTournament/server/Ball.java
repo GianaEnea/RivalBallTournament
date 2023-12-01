@@ -108,15 +108,16 @@ public class Ball {
     public void reset(){
         this.damage = 1;
         this.xSpeed = 3;
-        this.ySpeed = 3;
         this.size = 20;
         if (owner == 0) {
             this.x = fatherHandler.WIDTH / 2;
             this.y = fatherHandler.HEIGHT - 100;
+            this.ySpeed = -3;
         }
         else {
             this.x = fatherHandler.WIDTH / 2;
             this.y = 100;
+            this.ySpeed = 3;
         }
     }
 }

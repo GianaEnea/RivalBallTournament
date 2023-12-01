@@ -38,6 +38,7 @@ public class chkCollision implements Runnable{
                             if (collisionOnX || collisionOnY) {
                                 if (b.getOwner() != p.getId()) {
                                     p.setScore(20);
+                                    b.changeOwner();
                                 }
                             }
                         }
@@ -48,8 +49,7 @@ public class chkCollision implements Runnable{
                         b.reverseX();
                     
                     if (tempB.getY() <= 0) {
-                        b.reverseY();
-                        //b.reset();
+                        b.reset();
                         for (Paddle p : f.paddles) {
                             if (p.getId() == 0)
                                 p.setScore(100);
@@ -57,8 +57,7 @@ public class chkCollision implements Runnable{
                     }
                     
                     if (tempB.getY() >= f.HEIGHT- b.getSize()) {
-                        b.reverseY();
-                        //b.reset();
+                        b.reset();
                         for (Paddle p : f.paddles) {
                             if (p.getId() == 1)
                                 p.setScore(100);
