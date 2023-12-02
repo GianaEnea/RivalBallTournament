@@ -9,8 +9,9 @@ public class Ball {
     private int damage = 1;
     //player che ha colpito la pallina per ultimo
     private int owner;
-    private int xSpeed = 3;
-    private int ySpeed = 3;
+    private int SpeedMultiplyer = 5;
+    private int xSpeed = 4;
+    private int ySpeed = 4;
 
     public void setX(int x) {
         this.x = x;
@@ -34,6 +35,14 @@ public class Ball {
 
     public void setySpeed(int ySpeed) {
         this.ySpeed = ySpeed;
+    }
+
+    public int getSpeedMultiplyer() {
+        return SpeedMultiplyer;
+    }
+
+    public void setSpeedMultiplyer(int SpeedMultiplyer) {
+        this.SpeedMultiplyer = SpeedMultiplyer;
     }
 
     public int getDamage() {
@@ -107,17 +116,17 @@ public class Ball {
 
     public void reset(){
         this.damage = 1;
-        this.xSpeed = 3;
+        this.xSpeed = 4;
         this.size = 20;
         if (owner == 0) {
             this.x = fatherHandler.WIDTH / 2;
             this.y = fatherHandler.HEIGHT - 100;
-            this.ySpeed = -3;
+            this.ySpeed = -4;
         }
         else {
             this.x = fatherHandler.WIDTH / 2;
             this.y = 100;
-            this.ySpeed = 3;
+            this.ySpeed = 4;
         }
     }
 }

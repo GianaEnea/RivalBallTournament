@@ -16,11 +16,28 @@ public class chkCollision implements Runnable{
             new Thread(() -> {
                 while (!f.gameOverFlag) {
                     Ball tempB = new Ball(b.getX()+b.getxSpeed(), b.getY()+b.getySpeed());
+                    tempB.setSize(b.getSize());
                     for (Paddle p : f.paddles) {
                         if (tempB.getBounds().intersects(p.getBounds())) {
+                            Rectangle r = tempB.getBounds().intersection(p.getBounds());
+
+                            double relativeIntersectX = (p.getX()+(p.WIDTH/2)) - (r.x + (r.getWidth()/2));
+                            double normalizedRelativeIntersectionX = (relativeIntersectX/(p.WIDTH/2));
+                            double bounceAngle = normalizedRelativeIntersectionX * f.MAXBOUNCEANGLE;
+                            b.setxSpeed((int)(b.getSpeedMultiplyer()*-Math.sin(bounceAngle)));
+                            b.setySpeed((int)(b.getSpeedMultiplyer()*Math.cos(bounceAngle)));
+
+                            if(b.getOwner() == 0)
+                                b.reverseY();
+
+                            if (b.getOwner() != p.getId()) {
+                                p.setScore(20);
+                                b.changeOwner();
+                            }
+                            /* 
                             boolean collisionOnX = false;
                             boolean collisionOnY = false;
-                            Rectangle r = tempB.getBounds().intersection(p.getBounds());
+                            
                             //se il rettangolo dell'intersezione ha la larghezza più grande dell'altezza è una collisione orizzontale
                             if (r.width > r.height) {
                                 collisionOnX = true;
@@ -40,7 +57,7 @@ public class chkCollision implements Runnable{
                                     p.setScore(20);
                                     b.changeOwner();
                                 }
-                            }
+                            }*/
                         }
                     }
                     
@@ -63,18 +80,6 @@ public class chkCollision implements Runnable{
                                 p.setScore(100);
                         }
                     }
-                    /*
-                    if (f.powerUps.size() != 0) {
-                        new Thread(() -> {
-                            for (PowerUp pow : f.powerUps) {
-                                if(f.paddles.get(pow.getSpownedBy()).getBounds().intersects(pow.getBounds())) {
-                                    f.applyPowerUp(pow);
-                                    f.powerUps.remove(pow);
-                                }
-                            }
-
-                        }).start();
-                    }*/
                 }
             }).start();
         }
@@ -124,12 +129,35 @@ public class chkCollision implements Runnable{
             }
         });
 
+        
+        Thread chkPowerUps = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!f.gameOverFlag) {
+                    if (!f.powerUps.isEmpty()) {
+                        String[] powerUpsS = f.usePowerUpsList(0, null).split(";");
+                        for (String power : powerUpsS) {
+                            if (power != "") {
+                                String[] pow = power.split(",");
+                                PowerUp p = new PowerUp(0, Integer.parseInt(pow[6]), Integer.parseInt(pow[3]), Integer.parseInt(pow[4]));
+                                if (f.paddles.get(p.getSpownedBy()).getBounds().intersects(p.getBounds())) {
+                                    p.setTypeString(pow[2]);
+                                    f.usePowerUpsList(3, p);
+                                }
+                            }
+                        }
+                    }
+                    try {Thread.sleep(5);} catch (InterruptedException e) {e.printStackTrace();}
+                }
+            }
+        });
+        
         // Verifica se è finitio il gioco
         Thread chkEnding = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (!f.gameOverFlag) {
-                    if (f.bricks.size() == 0) {
+                    if (f.bricks.isEmpty()) {
                         f.gameOverFlag = true;
                     }
                     try {Thread.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
@@ -138,6 +166,7 @@ public class chkCollision implements Runnable{
         });
         
         chkBricks.start();
+        chkPowerUps.start();
         chkEnding.start();
     }
 }

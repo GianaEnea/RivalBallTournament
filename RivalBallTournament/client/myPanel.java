@@ -90,6 +90,8 @@ public class myPanel extends JPanel{
 
 
     public void drawPaddle(Graphics2D g, int x, int y, int width, int height, int id) {
+        g.setColor(Color.BLACK);
+        g.drawRect(x, y, width, height);
         if (id == 0)
             g.setColor(Color.BLUE);
         else
@@ -99,6 +101,8 @@ public class myPanel extends JPanel{
     }
 
     public void drawBall(Graphics2D g, int x, int y, int size, int owner) {
+        g.setColor(Color.BLACK);
+        g.drawOval(x, y, size, size);
         if (owner == 0)
             g.setColor(Color.BLUE);
         else
@@ -107,6 +111,8 @@ public class myPanel extends JPanel{
     }
 
     public void drawBricks(Graphics2D g, int x, int y, int width, int height, int hp) {
+        g.setColor(Color.BLACK);
+        g.drawRect(x, y, width, height);
         if (hp == 3)
             g.setColor(Color.GREEN);
         else if (hp == 2)
@@ -120,30 +126,30 @@ public class myPanel extends JPanel{
     public void drawPowerUps(Graphics2D g, String type, int x, int y, int size) {
         //"BallBig", "BallSmall", "PaddleBig", "PaddleSmall", "BallDamage", "BallSlow", "BallFast"
         switch (type) {
-            case "BallBig"://Paddle
+            case "BallBig":
                 g.drawImage(image[0], x, y, null);
                 break;
-            case "BallSmall"://Ball
+            case "BallSmall":
                 g.drawImage(image[1], x, y, null);
                 break;
 
-            case "PaddleBig"://Brick
+            case "PaddleBig":
                 g.drawImage(image[2], x, y, null);
                 break;
                 
-            case "PaddleSmall"://PowerUp
+            case "PaddleSmall":
                 g.drawImage(image[3], x, y, null);
                 break;
 
-            case "BallDamage": //GameOver
+            case "BallDamage":
                 g.drawImage(image[4], x, y, null);
                 break;
 
-            case "BallSlow": //GameOver
+            case "BallSlow":
                 g.drawImage(image[5], x, y, null);
                 break;
             
-            case "BallFast": //GameOver
+            case "BallFast":
                 g.drawImage(image[6], x, y, null);
                 break;
 
@@ -151,7 +157,6 @@ public class myPanel extends JPanel{
             //nulla
                 break;
         }
-        g.fillRect(x, y, size, size);
     }
 
     public void gameOver(Graphics2D g, int id1, int score1, int id2, int score2) {

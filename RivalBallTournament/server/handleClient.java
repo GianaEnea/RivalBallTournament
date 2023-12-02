@@ -66,7 +66,7 @@ public class handleClient implements Runnable{
                 //se la stringa inizia con 3 sono informazioni Brick
                 output += f.useBricksList(0, null, null);
                 //se la stringa inizia con 4 sono informazioni PowerUp
-                output+= f.getPowerUps();
+                output+= f.usePowerUpsList(0, null);
                 writer.println(output);
                 
                 try {Thread.sleep(30);} catch (Exception e) {throw new RuntimeException();}

@@ -4,11 +4,11 @@ import java.awt.Rectangle;
 import java.util.Random;
 
 public class PowerUp {
-    public int id;
-    public int spownedBy;
-    public int type;
-    public int x, y;
-    public int speed = 1;
+    private int id;
+    private int spownedBy;
+    private int type;
+    private int x, y;
+    private int speed = 1;
     public static final int SIZE = 20;
     
 
@@ -28,6 +28,15 @@ public class PowerUp {
         this.type = type;
     }
 
+    public void setTypeString(String type) {
+        int count = 0;
+        for (String s : fatherHandler.powerUpsList) {
+            if (s.equals(type)) {
+                this.type = count;
+            }
+            count++;
+        }
+    }
 
     public int getSpownedBy() {
         return spownedBy;
@@ -66,10 +75,8 @@ public class PowerUp {
             y += speed;
         }
         else {
-            //forse
             y -= speed;
         }
-        y += speed;
     }
 
     //restituisce la posizione del powerUp nell'array dei powerUp
