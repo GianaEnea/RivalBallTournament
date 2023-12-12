@@ -7,7 +7,7 @@ Benvenuto nel gioco Rival Ball Tournament! In questo gioco, l'obiettivo è distr
 1. **Obiettivo**: Distruggi tutti i mattoni colpendoli con la palla ed evita che la palla avversaria cada nel tuo campo.
 2. **Controlli**:
    - Muovi la racchetta: Muovi il mouse da sinistra a destra.
-   - Tira la pallina: premi lo spazio per tirare la palla.
+   - Tira la pallina: premi un tasto del mouse per tirare la palla.
 
 ## Requisiti
 
@@ -26,14 +26,15 @@ Una cartella che contiene tutto il nessario
 2. Settare gli ip a cui i due client dovranno connettersi
 3. Aprire server.java ed eseguilo
 4. Aprire client.java ed eseguirlo
-5. 
+
 ## Come giocare
 
 - La palla rimbalzerà sui bordi della finestra e sulla racchetta.
 - Usa la racchetta per far rimbalzare la palla e colpire i mattoni.
 - Quando la palla colpisce un mattone, il mattone prenderà danno fino a distruggersi e la palla cambia direzione.
-- Se la palla raggiunge il fondo della finestra il tuo avversario guadagnerà dei punti. Il gioco termina quando tutti i mattoni sono distrutti.
-- L'obiettivo più punti dell'avversario dell'avversario.
+- Se la palla raggiunge il fondo della finestra il tuo avversario guadagnerà dei punti e la pallina tornerà sulla propira parte del campo.
+- Il gioco termina quando tutti i mattoni sono distrutti.
+- L'obiettivo è avere più punti dell'avversario.
 
 
 ## Suggerimenti
